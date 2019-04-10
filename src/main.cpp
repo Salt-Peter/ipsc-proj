@@ -1,5 +1,6 @@
 #include <iostream>
 #include "util.h"
+#include "LogisticRegression.h"
 
 using namespace std;
 
@@ -15,6 +16,18 @@ int main(int argc, char **argv) {
     }
 
     auto df = read_csv(filepath);
-    cout << "dataframe :-\n" << df << endl;
+    cout<<df.rows()<<endl;
+
+    // TODO: Split df into train and validate part
+
+
+    LogisticRegression model = LogisticRegression(0.1, 200, 0);
+
+    // TODO: Fit model through train df
+    model.fit_sequential(df);
+
+    // TODO: predict over validate df
+    model.predict(df);
+
     return 0;
 }
