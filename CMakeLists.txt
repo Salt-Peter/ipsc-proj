@@ -7,4 +7,5 @@ include_directories(include)
 
 add_executable(ipsc_proj
         include/util.h
+        include/LogisticRegression.h
         src/main.cpp)
