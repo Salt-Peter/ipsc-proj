@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     }
 
     auto df = read_csv(filepath);
-    cout <<"df dimensions: "<< df.rows() << "x" << df.cols() << endl;
+    cout << "df dimensions: " << df.rows() << "x" << df.cols() << endl;
 
     auto df_X_y = split_X_y(df);
     auto X = df_X_y.first;
@@ -31,7 +31,9 @@ int main(int argc, char **argv) {
     model.fit_sequential(X, y);
 
     // TODO: predict over validate df
-    model.predict(df);
+    auto X_test = read_csv("/home/abhinav/projects/ipsc-proj/data/test.csv");
+    auto y_pred = model.predict(X_test);
 
+    cout << y_pred << endl;
     return 0;
 }
