@@ -64,4 +64,32 @@ Eigen::MatrixXd read_csv(const string &filepath) {
     return df;
 }
 
+
+pair<Eigen::MatrixXd, Eigen::VectorXd> split_X_y(Eigen::MatrixXd df) {
+    auto row = df.rows();
+    auto col = df.cols();
+
+    Eigen::MatrixXd X(row, col - 1);
+    Eigen::VectorXd y(row);
+
+    for (auto i = 0; i < row; i++) {
+        for (auto j = 0; j < col - 1; j++) {
+            X(i, j) = df(i, j);
+        }
+
+        y(i) = df(i, col - 1);
+    }
+
+    return make_pair(X, y);
+}
+
+
+double sigmoid(double z) {
+/** Sigmoid function :
+ * g(z) = 1 / (1 + e^(-z))
+ */
+
+    return 1.0 / (1.0 + exp(-z));
+}
+
 #endif //UTIL_H

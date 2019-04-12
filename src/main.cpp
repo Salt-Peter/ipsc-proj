@@ -16,7 +16,11 @@ int main(int argc, char **argv) {
     }
 
     auto df = read_csv(filepath);
-    cout<<df.rows()<<endl;
+    cout <<"df dimensions: "<< df.rows() << "x" << df.cols() << endl;
+
+    auto df_X_y = split_X_y(df);
+    auto X = df_X_y.first;
+    auto y = df_X_y.second;
 
     // TODO: Split df into train and validate part
 
@@ -24,7 +28,7 @@ int main(int argc, char **argv) {
     LogisticRegression model = LogisticRegression(0.1, 200, 0);
 
     // TODO: Fit model through train df
-    model.fit_sequential(df);
+    model.fit_sequential(X, y);
 
     // TODO: predict over validate df
     model.predict(df);
