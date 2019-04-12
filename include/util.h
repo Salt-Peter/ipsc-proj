@@ -4,6 +4,7 @@
 #include <fstream> // ifstream, ofstream, fstream classes
 #include "Eigen/Dense"
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -91,5 +92,49 @@ double sigmoid(double z) {
 
     return 1.0 / (1.0 + exp(-z));
 }
+
+Eigen::MatrixXd convert_to_binary_class(Eigen::MatrixXd &df, long true_class) {
+    auto m = df.rows();
+    auto label_index = df.cols() -1;
+    Eigen::MatrixXd df_bin = df;
+    for (auto i = 0; i < m; i++) {
+        if (df(i,label_index) == true_class)
+            df_bin(i, label_index) = 1;
+        else
+            df_bin(i,label_index) = 0;
+    }
+
+    return df_bin;
+}
+
+
+vector<int> get_unique_labels(Eigen::MatrixXd &df, int label_index) {
+    auto m = df.rows();
+    vector<int> labels(m, 0);
+    for (auto i = 0; i < m; i++) {
+        labels[i] = df(i, label_index);
+    }
+
+    // {1,2,3,1,2,3,3,4,5,4,5,6,7};
+    sort(labels.begin(), labels.end());
+    // 1 1 2 2 3 3 3 4 4 5 5 6 7
+    auto last = std::unique(labels.begin(), labels.end());
+    // it now holds {1 2 3 4 5 6 7 x x x x x x}, where 'x' is indeterminate
+    labels.erase(last, labels.end());
+
+    return labels;
+}
+
+//// TODO: Find an efficient way or a library method
+int max_index(Eigen::RowVectorXd row) {
+    // Return index of max element
+    int max_index = 0;
+    for (auto i = 1; i < row.cols(); i++) {
+        if (row(i) > row(max_index))
+            max_index = i;
+    }
+    return max_index;
+}
+
 
 #endif //UTIL_H

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <Eigen/Core>
 
+using namespace std;
+
 class LogisticRegression {
 private:
     double alpha;   // learning rate
@@ -127,9 +129,57 @@ public:
         cout << "dim X: " << X.rows() << " x " << X.cols() << endl;
         auto y_prob = (X * this->theta).unaryExpr(std::ptr_fun(sigmoid)); // FIXME: convert to loop
         return y_prob;
-//        return Eigen::VectorXd(X.cols() + 1);
     }
 };
+
+
+
+Eigen::VectorXd one_vs_all(Eigen::MatrixXd &df) {
+    int label_col_index = df.cols() - 1;
+    auto unique_labels = get_unique_labels(df, label_col_index);
+
+    auto n_unique_labels = unique_labels.size();
+    auto n_features = df.cols(); // -1 for label column and +1 for x0 column (column of ones)
+    auto m = df.rows();
+
+    // dim(label_probs) = m x num_unique_labels + 1(for storing the final highest probability label)
+    Eigen::MatrixXd label_probs;
+    label_probs.setZero(m, n_unique_labels + 1);
+
+
+    for (auto i = 0; i < n_unique_labels; i++) {
+        // convert multiclass to binary class
+        auto df_bin = convert_to_binary_class(df, unique_labels[i]);
+
+        auto df_X_y = split_X_y(df_bin);
+        auto X = df_X_y.first;
+        auto y = df_X_y.second;
+
+        // Fit models one by one and record the probabilities
+        LogisticRegression model = LogisticRegression(0.1, 200, 0);
+        model.fit_sequential(X, y);
+        auto y_prob = model.predict_prob(df_X_y.first);
+
+        cout << "label_probs before: \n" << label_probs << endl;
+
+        // ith column refers to ith model (in total there will be "n_unique_label" number of models)
+        label_probs.col(i) << y_prob;
+
+        cout << "label_probs after: \n" << label_probs << endl;
+    }
+
+    for (auto r = 0; r < label_probs.rows(); r++) {
+        // for each row, set label to the class label with highest probability.
+        label_probs(r, label_probs.cols() - 1) = unique_labels[max_index(label_probs.row(r))];
+    }
+
+    cout << "label_probs Final: \n" << label_probs << endl;
+
+    Eigen::VectorXd y_pred = label_probs.col(label_probs.cols() - 1);
+
+    return y_pred;
+
+}
 
 
 #endif //LOGISTICREGRESSION_H
