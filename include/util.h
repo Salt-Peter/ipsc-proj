@@ -95,13 +95,13 @@ double sigmoid(double z) {
 
 Eigen::MatrixXd convert_to_binary_class(Eigen::MatrixXd &df, long true_class) {
     auto m = df.rows();
-    auto label_index = df.cols() -1;
+    auto label_index = df.cols() - 1;
     Eigen::MatrixXd df_bin = df;
     for (auto i = 0; i < m; i++) {
-        if (df(i,label_index) == true_class)
+        if (df(i, label_index) == true_class)
             df_bin(i, label_index) = 1;
         else
-            df_bin(i,label_index) = 0;
+            df_bin(i, label_index) = 0;
     }
 
     return df_bin;
@@ -136,5 +136,14 @@ int max_index(Eigen::RowVectorXd row) {
     return max_index;
 }
 
+double accuracy(Eigen::VectorXd &y_pred, Eigen::VectorXd &y_true) {
+    int correct_count = 0;
+    for (auto i = 0; i < y_pred.rows(); i++) {
+        if (y_pred.row(i) == y_true.row(i)) {
+            correct_count++;
+        }
+    }
+    return (correct_count * 1.0) / y_pred.rows();
+}
 
 #endif //UTIL_H
