@@ -85,7 +85,7 @@ pair<Eigen::MatrixXd, Eigen::VectorXd> split_X_y(Eigen::MatrixXd df) {
 }
 
 
-double sigmoid(double z) {
+double g(double z) {
 /** Sigmoid function :
  * g(z) = 1 / (1 + e^(-z))
  */
@@ -93,7 +93,7 @@ double sigmoid(double z) {
     return 1.0 / (1.0 + exp(-z));
 }
 
-Eigen::MatrixXd convert_to_binary_class(Eigen::MatrixXd &df, long true_class) {
+Eigen::MatrixXd convert_to_binary_class(Eigen::MatrixXd df, long true_class) {
     auto m = df.rows();
     auto label_index = df.cols() - 1;
     Eigen::MatrixXd df_bin = df;
@@ -108,7 +108,7 @@ Eigen::MatrixXd convert_to_binary_class(Eigen::MatrixXd &df, long true_class) {
 }
 
 
-vector<int> get_unique_labels(Eigen::MatrixXd &df, int label_index) {
+vector<int> get_unique_labels(Eigen::MatrixXd df, int label_index) {
     auto m = df.rows();
     vector<int> labels(m, 0);
     for (auto i = 0; i < m; i++) {
@@ -136,7 +136,7 @@ int max_index(Eigen::RowVectorXd row) {
     return max_index;
 }
 
-double accuracy(Eigen::VectorXd &y_pred, Eigen::VectorXd &y_true) {
+double accuracy(Eigen::VectorXd y_pred, Eigen::VectorXd y_true) {
     int correct_count = 0;
     for (auto i = 0; i < y_pred.rows(); i++) {
         if (y_pred.row(i) == y_true.row(i)) {

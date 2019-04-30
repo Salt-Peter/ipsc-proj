@@ -2,7 +2,7 @@ INCLUDE_DIR=include
 CXX = g++
 # -Wall = flag for all warnings
 # -g = adds debugging information (so that the executable can later be run under a debugger).
-CXXFLAGS = -Wall -g -std=c++1z -I$(INCLUDE_DIR)
+CXXFLAGS = -Wall -g -std=c++1z -I$(INCLUDE_DIR) -fopenmp
 
 # example:-
 # all: library.cpp main.cpp
