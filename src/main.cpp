@@ -14,7 +14,7 @@ VectorXd one_vs_all_sequential(MatrixXd df);
 VectorXd one_vs_all_parallel(MatrixXd df);
 
 int main() {
-    std::string filepath = "/home/abhinav/projects/ipsc-proj/data/train.csv";
+    std::string filepath = "data/train_orig.csv";
 
     auto df = read_csv(filepath);
     std::cout << "df dimensions: " << df.rows() << "x" << df.cols() << std::endl;

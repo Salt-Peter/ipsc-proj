@@ -19,4 +19,4 @@ all:
 	$(CXX) $(CXXFLAGS) src/main.cpp -o build/main.o
 
 clean:
-	rm bin/* build/*
+	rm build/*
